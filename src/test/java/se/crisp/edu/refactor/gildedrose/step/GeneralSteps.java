@@ -9,6 +9,9 @@ import se.crisp.edu.refactor.gildedrose.GildedRose;
 import se.crisp.edu.refactor.gildedrose.Inventory;
 import se.crisp.edu.refactor.gildedrose.Item;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.junit.Assert.assertEquals;
 
 public class GeneralSteps {
@@ -49,6 +52,8 @@ public class GeneralSteps {
 
 
     private int parseRelativeDay(String relativeDay) {
+        Pattern pattern = Pattern.compile("(\\d+) days");   // the pattern to search for
+        Matcher matcher = pattern.matcher(relativeDay);
         if (relativeDay.equalsIgnoreCase("yesterday")) {
             return -1;
         }
@@ -58,8 +63,19 @@ public class GeneralSteps {
         if (relativeDay.equalsIgnoreCase("tomorrow")) {
             return 1;
         }
+        if (relativeDay.equalsIgnoreCase("never")) {
+            return Integer.MIN_VALUE;
+        }
+        if (matcher.find()){
+            return Integer.parseInt(matcher.group(1));
+        }
         throw new IllegalArgumentException(relativeDay + " is not understood.");
     }
 
+    @Given("^an item named (.*) with quality (\\d+) and sell by date (.*)$")
+    public void anItemWithNameWithQualityAndSellByDate(String name, int quality, String relativeDay) {
+        currentItem = new Item(name, parseRelativeDay(relativeDay), quality);
+        inventory.addItem(currentItem);
+    }
 }
 
