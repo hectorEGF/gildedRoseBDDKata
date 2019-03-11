@@ -5,9 +5,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import se.crisp.edu.refactor.gildedrose.GildedRose;
-import se.crisp.edu.refactor.gildedrose.Inventory;
-import se.crisp.edu.refactor.gildedrose.Item;
+import se.crisp.edu.refactor.gildedrose.*;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,7 +17,7 @@ public class GeneralSteps {
     private static final String SOME_NAME = "some name";
     private GildedRose gildedRose;
     private Inventory inventory;
-    private Item currentItem;
+    private DegradingItem currentItem;
 
     @Before
     public void beforeAll() {
@@ -29,7 +27,7 @@ public class GeneralSteps {
 
     @Given("^an item with quality (\\d+) and sell by date (.*)")
     public void anItemWithQualityAndSellByDate(int quality, String relativeDay) throws Throwable {
-        currentItem = new Item(SOME_NAME, parseRelativeDay(relativeDay), quality);
+        currentItem = ItemFactory.newItem(SOME_NAME, parseRelativeDay(relativeDay), quality);
         inventory.addItem(currentItem);
     }
 
@@ -74,7 +72,7 @@ public class GeneralSteps {
 
     @Given("^an item named (.*) with quality (\\d+) and sell by date (.*)$")
     public void anItemWithNameWithQualityAndSellByDate(String name, int quality, String relativeDay) {
-        currentItem = new Item(name, parseRelativeDay(relativeDay), quality);
+        currentItem = ItemFactory.newItem(name, parseRelativeDay(relativeDay), quality);
         inventory.addItem(currentItem);
     }
 }
